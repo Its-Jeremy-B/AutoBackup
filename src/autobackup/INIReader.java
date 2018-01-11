@@ -47,8 +47,7 @@ public class INIReader {
             String settingsFile = "";
             
             // FileReader reads text files in the default encoding.
-            FileReader fileReader = 
-                new FileReader(fileLocation);
+            FileReader fileReader = new FileReader(fileLocation);
 
             // Always wrap FileReader in BufferedReader.
             BufferedReader bufferedReader = 

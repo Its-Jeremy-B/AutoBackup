@@ -30,6 +30,14 @@ public class AutoBackup_Main extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         
+        //If is a new install - Set lastBackup if not set before
+        if(INIReader.getSetting("lastBackup").equals("")){
+            INIReader.saveSettings("");
+            INIReader.setSetting("lastBackup", G.getTime()+"");
+            INIReader.setSetting("minimizeToTray", "True");
+            INIReader.setSetting("backupInterval", "24");
+        }
+        
         //Set minimize to tray setting if not set yet
         if(INIReader.getSetting("minimizeToTray").equals("")){
             INIReader.setSetting("minimizeToTray", "True");
@@ -46,17 +54,13 @@ public class AutoBackup_Main extends javax.swing.JFrame {
         new Thread(){
             public void run(){
                 while(true){
-                    System.out.println("Looping::"+G.getTime());
+                    System.out.println("Looping");
+                    
                     //Update Jlabel with time until next backup
-                    if(((Long.parseLong(INIReader.getSetting("lastBackup")) / 60) + (G.getBackupInterval() * 60)) - (G.getTime()/60) <= 0){
+                    if(((Long.parseLong(INIReader.getSetting("lastBackup")) / 60) + (G.getBackupInterval() * 60)) - (G.getTime()/60) <= 0 && !INIReader.getSetting("websiteName").equals("")){
                         jLabel1.setText("Backup is currently in progress...");
                     }else{
                         jLabel1.setText("Next backup starts in " + (((Long.parseLong(INIReader.getSetting("lastBackup")) / 60) + (G.getBackupInterval() * 60)) - (G.getTime()/60)) + " minutes.");
-                    }
-                    
-                    //Check if first backup has been completed
-                    if(INIReader.getSetting("lastBackup").equals("")){
-                        INIReader.setSetting("lastBackup", "0");
                     }
                     
                     try{
@@ -66,7 +70,7 @@ public class AutoBackup_Main extends javax.swing.JFrame {
                     }
                     
                     //Check if backup is ready
-                    if(((Long.parseLong(INIReader.getSetting("lastBackup")) / 60) + (G.getBackupInterval() * 60)) - (G.getTime()/60) <= 0){
+                    if(((Long.parseLong(INIReader.getSetting("lastBackup")) / 60) + (G.getBackupInterval() * 60)) - (G.getTime()/60) <= 0 && !INIReader.getSetting("websiteName").equals("")){
                         System.out.println("Backing up");
                         //Check if more than one website is being backed up
                         String[] websiteNames = new String[0];
